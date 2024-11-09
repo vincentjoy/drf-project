@@ -3,9 +3,14 @@ from .models import Movie
 
 
 class MovieSerializer(serializers.ModelSerializer):
+    name_len = serializers.SerializerMethodField()
+
     class Meta:
         model = Movie
         fields = '__all__'
+
+    def get_name_len(self, obj):
+        return len(obj.name)
 
     def validate(self, data):
         if data['name'] == data['description']:
