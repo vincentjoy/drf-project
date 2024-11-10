@@ -1,12 +1,11 @@
 from django.shortcuts import render
-from .models import Movie
 from django.http import JsonResponse
-from .models import Movie
-from .serializers import MovieSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework.views import APIView
+from .serializers import MovieSerializer
+from .models import Movie
 
 
 class MovieList(APIView):
