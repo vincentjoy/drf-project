@@ -43,6 +43,13 @@ class StreamingPlatformVS(viewsets.ViewSet):
         serializer = StreamingPlatformSerializer(watchList)
         return Response(serializer.data)
 
+    def create(self, request):
+        serializer = StreamingPlatformSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class WatchListAV(APIView):
     def get(self, request):
