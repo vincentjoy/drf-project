@@ -1,8 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework import generics
+from rest_framework import viewsets
 from .serializers import WatchListSerializer, StreamingPlatformSerializer, ReviewSerializer
 from .models import WatchList, StreamingPlatform, Review
 
@@ -29,42 +30,18 @@ class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ReviewSerializer
 
 
-class StreamingPlatformAV(APIView):
-    def get(self, request):
-        platforms = StreamingPlatform.objects.all()
-        serializer = StreamingPlatformSerializer(platforms, many=True)
+class StreamingPlatformVS(viewsets.ViewSet):
+
+    def list(self, request):
+        queryset = StreamingPlatform.objects.all()
+        serializer = StreamingPlatformSerializer(queryset, many=True)
         return Response(serializer.data)
 
-    def post(self, request):
-        serializer = StreamingPlatformSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class StreamingPlatformDetailAV(APIView):
-    def get(self, request, pk):
-        try:
-            platform = StreamingPlatform.objects.get(pk=pk)
-        except StreamingPlatform.DoesNotExist:
-            return Response({'Error': 'Platform not found'}, status=status.HTTP_404_NOT_FOUND)
-        serializer = StreamingPlatformSerializer(platform)
+    def retrieve(self, request, pk=None):
+        queryset = StreamingPlatform.objects.all()
+        watchList = get_object_or_404(queryset, pk=pk)
+        serializer = StreamingPlatformSerializer(watchList)
         return Response(serializer.data)
-
-    def put(self, request, pk):
-        platform = StreamingPlatform.objects.get(pk=pk)
-        serializer = StreamingPlatformSerializer(platform, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk):
-        platform = StreamingPlatform.objects.get(pk=pk)
-        platform.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class WatchListAV(APIView):
