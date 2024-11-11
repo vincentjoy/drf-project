@@ -7,9 +7,12 @@ from .serializers import WatchListSerializer, StreamingPlatformSerializer, Revie
 from .models import WatchList, StreamingPlatform, Review
 
 
-class ReviewList(generics.ListCreateAPIView):
-    queryset = Review.objects.all()
+class ReviewList(generics.ListAPIView):
     serializer_class = ReviewSerializer
+
+    def get_queryset(self):
+        pk = self.kwargs['pk']
+        return Review.objects.filter(watchlist=pk)
 
 
 class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
