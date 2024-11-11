@@ -30,25 +30,9 @@ class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ReviewSerializer
 
 
-class StreamingPlatformVS(viewsets.ViewSet):
-
-    def list(self, request):
-        queryset = StreamingPlatform.objects.all()
-        serializer = StreamingPlatformSerializer(queryset, many=True)
-        return Response(serializer.data)
-
-    def retrieve(self, request, pk=None):
-        queryset = StreamingPlatform.objects.all()
-        watchList = get_object_or_404(queryset, pk=pk)
-        serializer = StreamingPlatformSerializer(watchList)
-        return Response(serializer.data)
-
-    def create(self, request):
-        serializer = StreamingPlatformSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class StreamingPlatformVS(viewsets.ModelViewSet):
+    queryset = StreamingPlatform.objects.all()
+    serializer_class = StreamingPlatformSerializer
 
 
 class WatchListAV(APIView):
