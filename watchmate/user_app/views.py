@@ -1,7 +1,10 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializers import RegistrationSerializers
 from rest_framework.authtoken.models import Token
+from rest_framework import status
+
+from .serializers import RegistrationSerializers
+from . import models
 
 @api_view(['POST'])
 def registration_view(request):
@@ -9,17 +12,17 @@ def registration_view(request):
         serializer = RegistrationSerializers(data=request.data)
 
         data = {}
-        status = 201
+        status_code = status.HTTP_201_CREATED
 
         if serializer.is_valid():
             account = serializer.save()
             data['message'] = 'Registration successful'
-            token = Token.objects.create(user=account)
-            data['token'] = token.key
+            token = Token.objects.get(user=account).key
+            data['token'] = token
         else:
             data = serializer.errors
-            status = 400
+            status_code = status.HTTP_400_BAD_REQUEST
 
-        return Response(data, status=status)
+        return Response(data, status=status_code)
 
 
