@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework import generics
 from rest_framework import viewsets
+from rest_framework import filters
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.throttling import ScopedRateThrottle, AnonRateThrottle
 from .serializers import WatchListSerializer, StreamingPlatformSerializer, ReviewSerializer
@@ -73,6 +74,20 @@ class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
 class StreamingPlatformVS(viewsets.ModelViewSet):
     queryset = StreamingPlatform.objects.all()
     serializer_class = StreamingPlatformSerializer
+
+
+class WatchListSearch(generics.ListAPIView):
+    queryset = WatchList.objects.all()
+    serializer_class = WatchListSerializer
+    filter_backends = [filters.SearchFilter]
+    filterset_fields = ['title', 'platform__name']
+
+
+class WatchListSort(generics.ListAPIView):
+    queryset = WatchList.objects.all()
+    serializer_class = WatchListSerializer
+    filter_backends = [filters.OrderingFilter]
+    ordering_filters = ['avg_rating']
 
 
 class WatchListAV(APIView):
