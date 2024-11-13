@@ -13,6 +13,14 @@ from watchlist_app.api.permissions import IsAdminOrReadOnly, IsReviewUserOrReadO
 from watchlist_app.api.throttling import ReviewCreateThrottle, ReviewListThrottel
 
 
+class UserReview(generics.ListAPIView):
+    serializer_class = ReviewSerializer
+
+    def get_queryset(self):
+        user = self.kwargs['username']
+        return Review.objects.filter(review_user__username=user)
+
+
 class ReviewCreate(generics.CreateAPIView):
     serializer_class = ReviewSerializer
     permission_classes = [IsAuthenticated]

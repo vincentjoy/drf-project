@@ -131,8 +131,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication'
     ],
     'DEFAULT_THROTTLE_RATES': {
-        'review_create': '1/day',
-        'review_list': '5/day',
-        'review_detail': '10/day'
+        'review_create': '10/day',
+        'review_list': '15/day',
+        'review_detail': '20/day'
     }
 }
