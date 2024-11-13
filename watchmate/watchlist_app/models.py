@@ -35,4 +35,4 @@ class Review(models.Model):
     active = models.BooleanField(default=True)
 
     def __str__(self):
-        return f"{self.rating}/5 rating for {self.watchlist.title}"
+        return f"{self.rating}/5 rating for {self.watchlist.title} by {self.review_user.username}"
