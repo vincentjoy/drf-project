@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'user_app',
+    'django_filters'
 ]
 
 MIDDLEWARE = [
@@ -131,8 +132,9 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication'
     ],
     'DEFAULT_THROTTLE_RATES': {
-        'review_create': '10/day',
-        'review_list': '15/day',
-        'review_detail': '20/day'
+        'anon': '10/day',
+        'review_create': '100/day',
+        'review_list': '150/day',
+        'review_detail': '200/day'
     }
 }
