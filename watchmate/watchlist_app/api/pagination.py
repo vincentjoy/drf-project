@@ -1,4 +1,4 @@
-from rest_framework.pagination import PageNumberPagination, LimitOffsetPagination
+from rest_framework.pagination import PageNumberPagination, LimitOffsetPagination, CursorPagination
 
 
 class WatchListPagination(PageNumberPagination):
@@ -14,3 +14,8 @@ class WatchListLimitOffsetPagination(LimitOffsetPagination):
     max_limit = 15
     limit_query_param = 'limit'  # Query parameter for specifying the page size
     offset_query_param = 'start'  # Query parameter for specifying the offset
+
+
+class WatchListCursorPagination(CursorPagination):
+    page_size = 10  # Number of items per page
+    ordering = '-created'  # Order items by created date in descending order
