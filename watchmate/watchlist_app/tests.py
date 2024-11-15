@@ -50,3 +50,43 @@ class StreamingPlatformTestCase(APITestCase):
         }
         response = self.client.post(reverse('streaming_platform-list'), data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+
+class WatchListTestCase(APITestCase):
+
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='test123')
+        self.token = Token.objects.create(user=self.user)
+        self.client.credentials(HTTP_AUTHORIZATION='Token '+self.token.key)
+
+        data = {
+            'name': 'Disney+',
+            'about': 'The world\'s largest streaming service',
+            'website': 'https://www.disneyplus.com/'
+        }
+        self.stream = models.StreamingPlatform.objects.create(data)
+        self.watchlist = models.WatchList.objects.create(platform=self.stream, title="Example", synopsis="Example synopsis", active=True)
+
+    def test_watch_list_create(self):
+        data = {
+            'platform': self.stream,
+            'title': 'The Shawshank Redemption',
+            'synopsis': 'Two imprisoned men bond over a decade-long marriage.',
+            'active': True,
+        }
+        response = self.client.post(reverse('watchlist_list'), data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(models.WatchList.objects.count(), 1)
+        self.assertEqual(models.WatchList.objects.get().title, 'The Shawshank Redemption')
+
+    def test_watchlist_list(self):
+        response = self.client.get(reverse('watch_list'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_watchlist_details(self):
+        response = self.client.get(reverse('details', args=(self.watchlist.id,)))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(models.WatchList.objects.count(), 1)
+        self.assertEqual(models.WatchList.objects.get().title, 'The Shawshank Redemption')
+
+
