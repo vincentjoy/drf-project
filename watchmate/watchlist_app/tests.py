@@ -153,3 +153,7 @@ class ReviewTestCase(APITestCase):
     def test_review_ind(self):
         response = self.client.get(reverse('review_detail'), args=(self.review.id, ))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_review_user(self):
+        response = self.client.get('/watch/reviews/?username'+ self.user.username)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
