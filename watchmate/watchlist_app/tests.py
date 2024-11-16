@@ -83,38 +83,32 @@ class WatchListTestCase(APITestCase):
         self.assertEqual(models.WatchList.objects.get().title, 'Example')
 
 
-# class ReviewTestCase(APITestCase):
+class ReviewTestCase(APITestCase):
 
-#     def setUp(self):
-#         self.user = User.objects.create_user(username='testuser', password='test123')
-#         self.token = Token.objects.create(user=self.user)
-#         self.client.credentials(HTTP_AUTHORIZATION='Token '+self.token.key)
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='test123')
+        self.token = Token.objects.get(user__username=self.user)
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
 
-#         data = {
-#             'name': 'Disney+',
-#             'about': 'The world\'s largest streaming service',
-#             'website': 'https://www.disneyplus.com/'
-#         }
-#         self.stream = models.StreamingPlatform.objects.create(data)
-#         self.watchlist = models.WatchList.objects.create(platform=self.stream, title="Example", synopsis="Example synopsis", active=True)
-#         self.watchlist2 = models.WatchList.objects.create(platform=self.stream, title="Example 2", synopsis="Example synopsis 2", active=True)
-#         self.review = models.Review.objects.create(review_user=self.user, rating=5, description="Great Moview",
-#                                                    watchlist=self.watchlist2, active=True)
+        self.stream = models.StreamingPlatform.objects.create(name='Disney+', about="The world\'s largest streaming service", website="https://www.disneyplus.com/")
+        self.watchlist = models.WatchList.objects.create(platform=self.stream, title="Example", synopsis="Example synopsis", active=True)
+        self.watchlist2 = models.WatchList.objects.create(platform=self.stream, title="Example 2", synopsis="Example synopsis 2", active=True)
+        self.review = models.Review.objects.create(review_user=self.user, rating=5, review="Great Moview", watchlist=self.watchlist2, active=True)
 
-#     def test_review_create(self):
-#         data = {
-#             "review_user": self.user,
-#             "rating": 5,
-#             "description": self.watchlist,
-#             "active": True,
-#         }
+    def test_review_create(self):
+        data = {
+            "review_user": self.user,
+            "rating": 5,
+            "review": self.watchlist,
+            "active": True,
+        }
 
-#         response = self.client.post(reverse('review_create', args=(self.watchlist.id)), data)
-#         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-#         self.assertEqual(models.Review.objects.count(), 2)
+        response = self.client.post(reverse('review_create', args=(self.watchlist.id, )), data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(models.Review.objects.count(), 2)
 
-#         response = self.client.post(reverse('review_create', args=(self.watchlist.id)), data)
-#         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        response = self.client.post(reverse('review_create', args=(self.watchlist.id, )), data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 #     def test_review_create_unauth(self):
 #         data = {
