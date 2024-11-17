@@ -7,17 +7,6 @@ from watchlist_app import serializers, models
 
 class StreamingPlatformTestCase(APITestCase):
 
-    # def setUp(self):
-        # self.user = User.objects.create_user(username='testuser', password='test123')
-        # self.token = Token.objects.create(user=self.user)
-        # self.client.credentials(HTTP_AUTHORIZATION='Token '+self.token.key)
-
-        # data = {
-        #     'name': 'Disney+',
-        #     'about': 'The world\'s largest streaming service',
-        #     'website': 'https://www.disneyplus.com/'
-        # }
-        # self.stream = models.StreamingPlatform.objects.create(**data)
 
     def test_streaming_platform_create(self):
         data = {
