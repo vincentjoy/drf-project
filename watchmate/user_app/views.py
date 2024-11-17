@@ -2,9 +2,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework import status
-
-from .serializers import RegistrationSerializers
-from . import models
+from . import models, serializers
 
 @api_view(['POST'])
 def logout_view(request):
@@ -15,7 +13,7 @@ def logout_view(request):
 @api_view(['POST'])
 def registration_view(request):
     if request.method == 'POST':
-        serializer = RegistrationSerializers(data=request.data)
+        serializer = serializers.RegistrationSerializers(data=request.data)
 
         data = {}
         status_code = status.HTTP_201_CREATED
